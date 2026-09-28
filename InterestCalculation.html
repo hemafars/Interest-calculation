@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en-ar" dir="rtl">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>حاسبة فائدة التأخير</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <style>
+    @media print {
+      .form {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg bg-body-tertiary ">
+    <div class="container-fluid w-75">
+      <a class="navbar-brand" href="#">Navbar</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Link</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Dropdown
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">Action</a></li>
+              <li><a class="dropdown-item" href="#">Another action</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item" href="#">Something else here</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+          </li>
+        </ul>
+        <form class="d-flex" role="search">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+      </div>
+    </div>
+  </nav>
+  <div class="container w-50">
+
+    <div id="nowdate"></div>
+    <div class="form">
+      <form>
+        <div class="mb-1">
+          <label for="exampleInputEmail1" class="form-label">اسم العميل</label>
+          <input type="text" class="form-control" id="clientName" aria-describedby="emailHelp">
+        </div>
+        <div class="mb-1">
+          <label for="exampleInputEmail1" class="form-label">الوحدة</label>
+          <input type="text" class="form-control" id="Loneliness" aria-describedby="emailHelp">
+        </div>
+        <div class="mb-1">
+          <label for="exampleInputEmail1" class="form-label">العقار</label>
+          <input type="text" class="form-control" id="realEstate" aria-describedby="emailHelp">
+        </div>
+        <div class="mb-1">
+          <label for="exampleInputEmail1" class="form-label">قيمة القسط</label>
+          <input type="number" class="form-control" id="installmentAmount" aria-describedby="emailHelp">
+        </div>
+        <div class="mb-1">
+          <label for="exampleInputEmail1" class="form-label">موعد القسط</label>
+          <input type="date" class="form-control" id="installmentDueDate" aria-describedby="emailHelp">
+        </div>
+        <div class="mb-1">
+          <label for="exampleInputEmail1" class="form-label">تاريخ السداد</label>
+          <input type="date" class="form-control" id="paymentDate" aria-describedby="emailHelp">
+        </div>
+        <div class="mb-1">
+          <label for="exampleInputEmail1" class="form-label">قيمة الفائدة</label>
+          <input type="number" class="form-control" id="interest-Value" aria-describedby="emailHelp">
+        </div>
+        <button type="submit" class="btn btn-primary" id="submit">Submit</button>
+      </form>
+    </div>
+    <div id="view">
+    </div>
+  </div>
+  <script>
+    const clientName = document.getElementById("clientName");//اسم العميل
+    const Loneliness = document.getElementById("Loneliness");//الوحدة
+    const realEstate = document.getElementById("realEstate");//العقار
+    const installmentAmount = document.getElementById("installmentAmount");//قيمة القسط
+    const installmentDueDate = document.getElementById("installmentDueDate");//موعد القسط
+    const paymentDate = document.getElementById("paymentDate");//تاريخ السداد
+    const interest = document.getElementById("interest-Value");//قيمة الفائدة
+    const submit = document.getElementById("submit");
+    const view = document.getElementById("view");
+    const nowDate = document.getElementById("nowdate")
+    const now = new Date();
+    nowDate.innerHTML = `تاريخ اليوم ${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()}`
+    submit.addEventListener("click", calculateInstallmentAmount)
+    function calculateInstallmentAmount(e) {
+      e.preventDefault()
+      let deff = new Date(paymentDate.value) - new Date(installmentDueDate.value)
+      let year = new Date(paymentDate.value).getFullYear() - new Date(installmentDueDate.value).getFullYear()
+      let month = new Date(paymentDate.value).getMonth() - new Date(installmentDueDate.value).getMonth()
+      let date = new Date(paymentDate.value).getDate() - new Date(installmentDueDate.value).getDate()
+      console.log(deff)
+      console.log(year)
+      console.log(month)
+      console.log(date)
+      //معدل الفائدة
+      let interestReat = interest.value / 100
+      let monthcash = 3000 //غرامة التأخير
+      let Arrears//المتأخرات 
+      let Interest_amount //مبلغ-الفائدة
+      let total
+      if (month === 0 && year === 0 && date > 0) {
+        RoundPartialMonthUp = month + 1
+        Arrears = installmentAmount.value * RoundPartialMonthUp
+        Interest_amount = date * interest.value
+        total = Interest_amount + Arrears
+        console.log(`الاجمالي : ${total}`)
+        console.log(`مبلغ-الفائدة : ${Interest_amount}`)
+        console.log(`عدد الايام : ${date}`)
+        console.log(`month : ${month}`)
+        console.log(`Arrears : ${Arrears}`)
+      }
+
+
+      view.innerHTML = `
+    <table>
+        <tr>
+          <th>اسم العميل : </th>
+          <td>${clientName.value}</td>
+        </tr>
+        <tr>
+          <th>الوحدة : </th>
+          <td>${Loneliness.value}</td>
+        </tr>
+        <tr>
+          <th>العقار : </th>
+          <td>${realEstate.value}</td>
+        </tr>
+        <tr>
+          <th>قيمة القسط : </th>
+          <td>${installmentAmount.value}</td>
+        </tr>
+        <tr>
+          <th>موعد القسط : </th>
+          <td>${installmentDueDate.value}</td>
+        </tr>
+        <tr>
+          <th>موعد السداد : </th>
+          <td>${paymentDate.value}</td>
+        </tr>
+        <tr>
+          <th>التأخير : </th>
+          <td>${year} سنه ${month} شهر ${date} يوم</td>
+        </tr>
+        <tr>
+          <th>معدل الفائدة : </th>
+          <td>${interest.value} % </td>
+        </tr>
+        <tr>
+          <th>قيمة الفائدة : </th>
+          <td>$</td>
+        </tr>
+        <tr>
+          <th>المبلغ الملطوب : </th>
+          <td>$</td>
+        </tr>
+      </table>
+    `
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>
