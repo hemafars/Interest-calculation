@@ -112,30 +112,31 @@
     function calculateInstallmentAmount(e) {
       e.preventDefault()
       let deff = new Date(paymentDate.value) - new Date(installmentDueDate.value)
-      let year = new Date(paymentDate.value).getFullYear() - new Date(installmentDueDate.value).getFullYear()
-      let month = new Date(paymentDate.value).getMonth() - new Date(installmentDueDate.value).getMonth()
+      // let year = new Date(paymentDate.value).getFullYear() - new Date(installmentDueDate.value).getFullYear()
+      // let month = new Date(paymentDate.value).getMonth() - new Date(installmentDueDate.value).getMonth()
       let date = new Date(paymentDate.value).getDate() - new Date(installmentDueDate.value).getDate()
       console.log(deff)
-      console.log(year)
-      console.log(month)
+      // console.log(year)
+      // console.log(month)
       console.log(date)
       //معدل الفائدة
-      let interestReat = interest.value / 100
+      let interestReat = interest.value / 100;
       let monthcash = 3000 //غرامة التأخير
       let Arrears//المتأخرات 
       let Interest_amount //مبلغ-الفائدة
       let total
-      if (month === 0 && year === 0 && date > 0) {
-        RoundPartialMonthUp = month + 1
-        Arrears = installmentAmount.value * RoundPartialMonthUp
-        Interest_amount = date * interest.value
-        total = Interest_amount + Arrears
-        console.log(`الاجمالي : ${total}`)
-        console.log(`مبلغ-الفائدة : ${Interest_amount}`)
-        console.log(`عدد الايام : ${date}`)
-        console.log(`month : ${month}`)
-        console.log(`Arrears : ${Arrears}`)
-      }
+      // if (date > 0) {
+      // RoundPartialMonthUp = month + 1
+      // Arrears = installmentAmount.value * RoundPartialMonthUp
+      Interest_amount = date * interest.value
+      total = Number(Interest_amount) + Number(installmentAmount.value)
+      console.log(`Interest_amount : ${Interest_amount}`)
+      console.log(`الاجمالي : ${total}`)
+      console.log(`مبلغ-الفائدة : ${Interest_amount}`)
+      console.log(`عدد الايام : ${date}`)
+      // console.log(`month : ${month}`)
+      console.log(`Arrears : ${Arrears}`)
+      // }
 
 
       view.innerHTML = `
@@ -166,7 +167,7 @@
         </tr>
         <tr>
           <th>التأخير : </th>
-          <td>${year} سنه ${month} شهر ${date} يوم</td>
+          <td>${date} يوم</td>
         </tr>
         <tr>
           <th>معدل الفائدة : </th>
@@ -174,11 +175,11 @@
         </tr>
         <tr>
           <th>قيمة الفائدة : </th>
-          <td>$</td>
+          <td>${Interest_amount}</td>
         </tr>
         <tr>
           <th>المبلغ الملطوب : </th>
-          <td>$</td>
+          <td>${total}</td>
         </tr>
       </table>
     `
