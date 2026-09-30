@@ -13,13 +13,18 @@
         display: none;
       }
     }
+
+    span {
+      width: 110px;
+
+    }
   </style>
 </head>
 
 <body>
   <nav class="navbar navbar-expand-lg bg-body-tertiary ">
     <div class="container-fluid w-75">
-      <a class="navbar-brand" href="#">Navbar</a>
+      <a class="navbar-brand" href="#">مصر لادارة الاصول العقارية</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -59,37 +64,38 @@
   <div class="container w-50">
 
     <div id="nowdate"></div>
-    <div class="form">
+    <div class="form border p-3 m-2">
+      <h1 class="text-center mb-3">حاسبة فوائد التأخير</h1>
       <form>
-        <div class="mb-1">
-          <label for="exampleInputEmail1" class="form-label">اسم العميل</label>
+        <div class="input-group input-group-sm mb-3">
+          <span class="input-group-text " id="inputGroup-sizing-sm" style="width: 110px;">اسم العميل</span>
           <input type="text" class="form-control" id="clientName" aria-describedby="emailHelp">
         </div>
-        <div class="mb-1">
-          <label for="exampleInputEmail1" class="form-label">الوحدة</label>
+        <div class="input-group input-group-sm mb-3">
+          <span class="input-group-text" id="inputGroup-sizing-sm">الوحدة</span>
           <input type="text" class="form-control" id="Loneliness" aria-describedby="emailHelp">
         </div>
-        <div class="mb-1">
-          <label for="exampleInputEmail1" class="form-label">العقار</label>
+        <div class="input-group input-group-sm mb-3">
+          <span class="input-group-text" id="inputGroup-sizing-sm">العقار</span>
           <input type="text" class="form-control" id="realEstate" aria-describedby="emailHelp">
         </div>
-        <div class="mb-1">
-          <label for="exampleInputEmail1" class="form-label">قيمة القسط</label>
+        <div class="input-group input-group-sm mb-3">
+          <span class="input-group-text" id="inputGroup-sizing-sm">قيمة القسط</span>
           <input type="number" class="form-control" id="installmentAmount" aria-describedby="emailHelp">
         </div>
-        <div class="mb-1">
-          <label for="exampleInputEmail1" class="form-label">موعد القسط</label>
+        <div class="input-group input-group-sm mb-3">
+          <span class="input-group-text" id="inputGroup-sizing-sm">موعد القسط</span>
           <input type="date" class="form-control" id="installmentDueDate" aria-describedby="emailHelp">
         </div>
-        <div class="mb-1">
-          <label for="exampleInputEmail1" class="form-label">تاريخ السداد</label>
+        <div class="input-group input-group-sm mb-3">
+          <span class="input-group-text" id="inputGroup-sizing-sm">تاريخ السداد</span>
           <input type="date" class="form-control" id="paymentDate" aria-describedby="emailHelp">
         </div>
-        <div class="mb-1">
-          <label for="exampleInputEmail1" class="form-label">قيمة الفائدة</label>
+        <div class="input-group input-group-sm mb-3">
+          <span class="input-group-text" id="inputGroup-sizing-sm">معدل الفائدة</span>
           <input type="number" class="form-control" id="interest-Value" aria-describedby="emailHelp">
         </div>
-        <button type="submit" class="btn btn-primary" id="submit">Submit</button>
+        <button type="submit" class="btn btn-primary w-100" id="submit">احسب</button>
       </form>
     </div>
     <div id="view">
@@ -107,20 +113,110 @@
     const view = document.getElementById("view");
     const nowDate = document.getElementById("nowdate")
     const now = new Date();
+
     nowDate.innerHTML = `تاريخ اليوم ${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()}`
     submit.addEventListener("click", calculateInstallmentAmount)
     function calculateInstallmentAmount(e) {
       e.preventDefault()
       let deff = new Date(paymentDate.value) - new Date(installmentDueDate.value)
-      // let year = new Date(paymentDate.value).getFullYear() - new Date(installmentDueDate.value).getFullYear()
-      // let month = new Date(paymentDate.value).getMonth() - new Date(installmentDueDate.value).getMonth()
+      let year = new Date(paymentDate.value).getFullYear() - new Date(installmentDueDate.value).getFullYear()
+      let month = new Date(paymentDate.value).getMonth() - new Date(installmentDueDate.value).getMonth()
+      let date = new Date(paymentDate.value).getDate() - new Date(installmentDueDate.value).getDate()
+      console.log(`الفرق : ${deff}`)
+      console.log(`عدد السنين : ${year}`)
+      console.log(`عدد الشهور : ${month}`)
+      console.log(`عدد الايام : ${date}`)
+      let dayes = Math.floor(
+        (new Date(paymentDate.value) - new Date(installmentDueDate.value))
+        / (1000 * 60 * 60 * 24)
+      );
+      let interestReat = interest.value / 100;
+      console.log(`عدد الايام : ${dayes}`)
+
+      console.log(`معدل الفائدة : ${interestReat}`)
+      let مبلغ_الفائدة = installmentAmount.value * interestReat;
+      console.log(`مبلغ_الفائدة : ${مبلغ_الفائدة}`)
+      let toAllDay = مبلغ_الفائدة / 360;
+      console.log(`تقسيم علي السنه ${toAllDay}`)
+      let total = toAllDay * dayes
+      console.log(total.toFixed(2))
+
+      let finaltotal = total + Number(installmentAmount.value);
+
+      console.log(finaltotal.toFixed(2))
+      view.innerHTML = `
+      
+    <table>
+        <tr>
+          <th>اسم العميل : </th>
+          <td>${clientName.value}</td>
+        </tr>
+        <tr>
+          <th>الوحدة : </th>
+          <td>${Loneliness.value}</td>
+        </tr>
+        <tr>
+          <th>العقار : </th>
+          <td>${realEstate.value}</td>
+        </tr>
+        <tr>
+          <th>قيمة القسط : </th>
+          <td>${installmentAmount.value}</td>
+        </tr>
+        <tr>
+          <th>موعد القسط : </th>
+          <td>${installmentDueDate.value}</td>
+        </tr>
+        <tr>
+          <th>موعد السداد : </th>
+          <td>${paymentDate.value}</td>
+        </tr>
+        <tr>
+          <th>التأخير : </th>
+          <td>${year} سنه ${month} شهر ${date} يوم</td>
+        </tr>
+        <tr>
+          <th>معدل الفائدة : </th>
+          <td>${interest.value} % </td>
+        </tr>
+        <tr>
+          <th>غرامة التأخير : </th>
+          <td>${total.toFixed(2)} جنية </td>
+        </tr>
+        <tr>
+          <th>اجمالي المبلغ المطلوب : </th>
+          <td>${finaltotal.toFixed(2)} جنية </td>
+        </tr>
+      </table>
+    `
+    }
+  </script>
+  <!-- <script>
+    const clientName = document.getElementById("clientName");//اسم العميل
+    const Loneliness = document.getElementById("Loneliness");//الوحدة
+    const realEstate = document.getElementById("realEstate");//العقار
+    const installmentAmount = document.getElementById("installmentAmount");//قيمة القسط
+    const installmentDueDate = document.getElementById("installmentDueDate");//موعد القسط
+    const paymentDate = document.getElementById("paymentDate");//تاريخ السداد
+    const interest = document.getElementById("interest-Value");//قيمة الفائدة
+    const submit = document.getElementById("submit");
+    const view = document.getElementById("view");
+    const nowDate = document.getElementById("nowdate")
+    const now = new Date();
+    nowDate.innerHTML = `تاريخ اليوم ${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()}`
+    submit.addEventListener("click", calculateInstallmentAmount)
+    function calculateInstallmentAmount(e) {
+      e.preventDefault()
+      let deff = new Date(paymentDate.value) - new Date(installmentDueDate.value)
+      let year = new Date(paymentDate.value).getFullYear() - new Date(installmentDueDate.value).getFullYear()
+      let month = new Date(paymentDate.value).getMonth() - new Date(installmentDueDate.value).getMonth()
       let date = new Date(paymentDate.value).getDate() - new Date(installmentDueDate.value).getDate()
       console.log(deff)
-      // console.log(year)
-      // console.log(month)
+      console.log(year)
+      console.log(month)
       console.log(date)
       //معدل الفائدة
-      let interestReat = interest.value / 100;
+      
       let monthcash = 3000 //غرامة التأخير
       let Arrears//المتأخرات 
       let Interest_amount //مبلغ-الفائدة
@@ -128,8 +224,17 @@
       // if (date > 0) {
       // RoundPartialMonthUp = month + 1
       // Arrears = installmentAmount.value * RoundPartialMonthUp
+
+      let amount = interest / 360
+      console.log(`amount : ${amount}`)
       Interest_amount = date * interest.value
+
+
+
+      let days = year * 360 + month * 30 + date
+
       total = Number(Interest_amount) + Number(installmentAmount.value)
+      console.log(`days : ${days}`)
       console.log(`Interest_amount : ${Interest_amount}`)
       console.log(`الاجمالي : ${total}`)
       console.log(`مبلغ-الفائدة : ${Interest_amount}`)
@@ -167,7 +272,7 @@
         </tr>
         <tr>
           <th>التأخير : </th>
-          <td>${date} يوم</td>
+          <td>${year} سنه ${month} شهر ${date} يوم</td>
         </tr>
         <tr>
           <th>معدل الفائدة : </th>
@@ -184,7 +289,7 @@
       </table>
     `
     }
-  </script>
+  </script> -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
     crossorigin="anonymous"></script>
